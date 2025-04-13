@@ -1,9 +1,23 @@
-# cs532-final-project
+# CS532-Final-project
 The Final Project for CS532 - System for Data Science
 
-## Prerequisites Softwares
+# CS532-Final-Project
+The Final Project for CS532 - System for Data Science
+
+## Milestone Checklist
+- [x] Set up a MySQL database in a Docker container.
+- [x] Test Python connectivity to the MySQL database.
+- [ ] Clean each relevant dataset and combine datasets using PySpark.
+- [ ] Ingest cleaned data into the MySQL database.
+- [ ] Benchmark batch ingestion performance with varying hardware configurations.
+- [ ] Plot performance insights comparing rows processed per second.
+
+## Prerequisite Software
 1. Docker Daemon
-2. docker-compose
+2. Docker Compose
+3. Python 3.x
+4. PySpark
+5. MySQL Connector for Python
 
 ## Running the Application
 1. Start the database container
