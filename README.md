@@ -1,9 +1,6 @@
 # CS532-Final-project
 The Final Project for CS532 - System for Data Science
 
-# CS532-Final-Project
-The Final Project for CS532 - System for Data Science
-
 ## Milestone Checklist
 - [x] Set up a MySQL database in a Docker container.
 - [x] Test Python connectivity to the MySQL database.
