@@ -21,8 +21,6 @@ The Final Project for CS532 - System for Data Science
 From the /db directory run `docker-compose up -d` to start the database in detached mode
 2. Run main.py
 
-
-
 ## Database Credentials
 Create .env file in the db directory and enter the following values. This file should not be committed when pushing forward changes.
 
