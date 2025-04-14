@@ -1,11 +1,16 @@
 import os
+import time
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession
 from pyspark.sql import DataFrame
 from DataCleaning import clean_title_basics, clean_title_ratings  # Import cleaning functions
+from SparkConfig import load_config
 
-def create_spark_session():
+config = load_config(path=CONFIG_PATH)
+
+def create_spark_session(config):
     """Create and return a Spark session."""
+    print(config)
     return SparkSession.builder \
         .appName("Data Storage") \
         .config("spark.executor.memory", "4g") \
@@ -15,10 +20,12 @@ def create_spark_session():
 
 def store_to_mysql(df: DataFrame, table_name: str, jdbc_url: str, connection_properties: dict):
     """Store the PySpark DataFrame into a MySQL database table using JDBC."""
+    start_time = time.time()
     try:
         print(f"Storing data into MySQL table: {table_name}")
         df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties)
-        print(f"Data successfully stored in table: {table_name}")
+        end_time = time.time() - start_time
+        print(f"Data successfully stored in table: {table_name} in {end_time} seconds")
     except Exception as e:
         print(f"Error while storing data to MySQL: {e}")
 
@@ -56,8 +63,11 @@ def main():
 
     # Clean datasets using functions from DataCleaning.py
     print("Cleaning datasets...")
+    start_time = time.time()
     cleaned_basics = clean_title_basics(raw_basics)
     cleaned_ratings = clean_title_ratings(raw_ratings)
+    total_time = start_time - time.now()
+    print(str(total_time) + " seconds for cleaning the data")
 
 
     # Store the cleaned DataFrames into the MySQL database
