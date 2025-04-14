@@ -1,12 +1,29 @@
 import os
-from kaggle.api.kaggle_api_extended import KaggleApi
+from dotenv import load_dotenv
 
-# make sure that your kaggle.json file is in $pwd/.kaggle directory as kaggle.json
-# https://www.kaggle.com/docs/api#getting-started-installation-&-authentication 
-# explain how to do this
 
+# Make sure that the Kaggle API is installed and configured.
+# Add Kaggle Credentials to your environment variables
+# Get your Kaggle API credentials from https://www.kaggle.com/settings/account
+
+
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path="../setup/.env")
+
+# Set Kaggle credentials from environment variables
+os.environ["KAGGLE_USERNAME"] = os.getenv("KAGGLE_USERNAME")
+os.environ["KAGGLE_KEY"] = os.getenv("KAGGLE_KEY")
+
+
+#Kaggle needs the credentials to be set before it's imported
+from kaggle import KaggleApi
+
+
+# Initialize Kaggle API
 api = KaggleApi()
 api.authenticate()
 
+# Download and unzip the dataset
 dataset = "rahulsaranm/imdb-dataset"
-api.dataset_download_files(dataset, path='./data', unzip=True)
+api.dataset_download_files(dataset, path='../data',quiet=False, unzip=True)
