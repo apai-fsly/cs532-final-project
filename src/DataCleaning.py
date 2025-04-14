@@ -8,9 +8,10 @@ def create_spark_session():
     """Create and return a Spark session"""
     return SparkSession.builder \
         .appName("Data Cleaning and Storage") \
-        .config("spark.executor.memory", "4g") \
-        .config("spark.driver.memory", "4g") \
+        .config("spark.executor.memory", "8g") \
+        .config("spark.driver.memory", "8g") \
         .getOrCreate()
+
 
 #Title.basics file
 #Accept rows where titleType is "movie",tconst is not null or empty, primaryTitle is not null or empty, and startYear is valid
@@ -73,6 +74,17 @@ def main():
     print("Cleaning data...")
     cleaned_basics = clean_title_basics(basics_df).orderBy("tconst")
     cleaned_ratings = clean_title_ratings(ratings_df).orderBy("tconst")
+
+
+    #Force Spark to do lazy evaluation
+    # This will trigger the transformations and actions
+
+    rowCount =cleaned_basics.count()
+    print(f"Cleaned Title Basics Row Count: {rowCount}")
+    
+    rowCount = cleaned_ratings.count()
+    print(f"Cleaned Title Ratings Row Count:{rowCount}")
+    
 
     #Print the top 10 rows of the cleaned data
     print("Cleaned Title Basics Data:")
