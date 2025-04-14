@@ -52,10 +52,10 @@ def clean_title_ratings(df):
 def main():
     spark = create_spark_session()
     
-    #For running locally, add dataset folder to the solution
+    #For running locally, add data folder to the solution
     # Define paths to files
-    basics_path = "../dataset/title.basics.tsv"
-    ratings_path = "../dataset/title.ratings.tsv"
+    basics_path = "../data/title.basics.tsv"
+    ratings_path = "../data/title.ratings.tsv"
     
     # Load data
     print("Loading data...")

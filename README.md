@@ -1,11 +1,12 @@
-# CS532-Final-project
-The Final Project for CS532 - System for Data Science
+# CS532 Final Project
+The Final Project for COMPSCI CS532 - Systems for Data Science.
 
 ## Milestone Checklist
 - [x] Set up a MySQL database in a Docker container.
 - [x] Test Python connectivity to the MySQL database.
-- [ ] Clean each relevant dataset and combine datasets using PySpark.
-- [ ] Ingest cleaned data into the MySQL database.
+- [x] Find and load the dataset with correct instructions.
+- [x] Clean each relevant dataset and combine datasets using PySpark.
+- [x] Ingest cleaned data into the MySQL database.
 - [ ] Benchmark batch ingestion performance with varying hardware configurations.
 - [ ] Plot performance insights comparing rows processed per second.
 
@@ -16,10 +17,13 @@ The Final Project for CS532 - System for Data Science
 4. PySpark
 5. MySQL Connector for Python
 6. Python-dotenv
+7. Kaggle API
+
+
 
 ## Setup
 
-# Setting Up the Environment
+### Install packages
 
 1. **Update package lists**
     ```sh
@@ -34,24 +38,23 @@ The Final Project for CS532 - System for Data Science
 3. **Install PySpark**
     ```sh
     pip install pyspark
+    ```
 
 4. **Install Python-dotenv**
     ```sh
     pip install python-dotenv
+    ```
+
+5. **Install Kaggle API**
+    ```sh
+    pip install kaggle
+    ```
 
 
-## Running the Application
-1. Start the database container
-From the /db directory run `docker-compose up -d` to start the database in detached mode
-2. Switch to /src directory
-3. Run main.py
-4. Run DataCleaning.py
-5. Run DataStorage.py
+### Setup Environment File
+Create a `.env` file in the [setup](./setup) directory and enter the following values. This file should **not** be committed to version control.
 
-
-## Database Credentials
-Create .env file in the db directory and enter the following values. This file should not be committed when pushing forward changes.
-
+```sh
 MYSQL_DATABASE=mydb
 MYSQL_USER=myuser
 MYSQL_PASSWORD=mypassword
@@ -59,10 +62,59 @@ MYSQL_ROOT_PASSWORD=rootpass
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_DRIVER=com.mysql.cj.jdbc.Driver
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+ ```
+
+
+### Getting Kaggle Credentials
+1. Go to [Kaggle Account Settings](https://www.kaggle.com/settings/account).
+2. Scroll down to the API section.
+3. Click on `Create New API Token`. This will download a file called `kaggle.json`.
+4. Open the `kaggle.json` file in a text editor. It will look like this:
+```sh
+{
+  "username": "your_kaggle_username",
+  "key": "your_kaggle_api_key"
+}
+ ```
+5. Copy the `username` and `key` values and paste them into the `.env` file under `KAGGLE_USERNAME` and `KAGGLE_KEY`.
+
+
+### Download Dataset from Kaggle
+
+To download the dataset, follow these steps:
+
+1. Ensure the `.env` file is correctly set up with your Kaggle credentials:
+
+```sh
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+```
+
+2. Run the `DataDownload.py` script:
+
+```sh
+cd src
+python DataDownload.py
+```
+
+3. The dataset will be downloaded and unzipped into the [data](./data) directory.
+
+
 
 ## Testing Database Connectivity
-Once the container is up and running you can use the following query to create a Employees Table with some sample data
 
+1. Start the database container
+From the [setup](./setup) directory, run :
+```sh
+`docker-compose up -d` 
+```
+This starts the database in detached mode.
+
+2. Once the container is up and running, use the following query to create an `employees` table with some sample data:
+
+```sh
 CREATE TABLE IF NOT EXISTS employees (
     id INT PRIMARY KEY,
     name VARCHAR(100),
@@ -77,13 +129,17 @@ VALUES
 (3, 'Charlie', 35, 'HR'),
 (4, 'David', 40, 'Engineering'),
 (5, 'Eve', 28, 'Finance');
+```
+3. Run `TestDatabaseSetup.py` to verify the data:
 
-You should see the following output
-ashwinpai@XKX9DY07Q1 cs532-final-project % /usr/bin/python3 /Users/ashwinpai/src/ash/cs532-f
-inal-project/src/main.py
-25/04/09 18:31:24 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+```sh
+cd src
+python TestDatabaseSetup.py
+```
+
+4. You should see the following output:
+
+```sh
 +---+-------+---+-----------+
 | id|   name|age| department|
 +---+-------+---+-----------+
@@ -93,5 +149,28 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 |  4|  David| 40|Engineering|
 |  5|    Eve| 28|    Finance|
 +---+-------+---+-----------+
+```
 
-ashwinpai@XKX9DY07Q1 cs532-final-project % 
+## Running the Application
+1. Start the database container
+From the [setup](./setup) directory, run 
+```sh
+`docker-compose up -d`
+```
+2. Switch to [src](./src) directory
+```sh
+cd src
+```
+3. Run `TestDatabaseSetup.py`
+```sh
+python TestDatabaseSetup.py
+```
+4. Run `DataCleaning.py`
+```sh
+python DataCleaning.py.py
+```
+5. Run `DataStorage.py`
+
+```sh
+python DataStorage.py
+```

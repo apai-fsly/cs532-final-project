@@ -25,7 +25,7 @@ def store_to_mysql(df: DataFrame, table_name: str, jdbc_url: str, connection_pro
 def main():
 
      # Load environment variables from .env file
-    load_dotenv(dotenv_path="../db/.env") 
+    load_dotenv(dotenv_path="../setup/.env") 
 
     # Fetch MySQL connection properties from environment variables
     jdbc_url = f"jdbc:mysql://{os.getenv('MYSQL_HOST')}:{os.getenv('MYSQL_PORT')}/{os.getenv('MYSQL_DATABASE')}"
@@ -40,8 +40,8 @@ def main():
 
 
     # Load raw datasets
-    basics_path = "../dataset/title.basics.tsv"
-    ratings_path = "../dataset/title.ratings.tsv"
+    basics_path = "../data/title.basics.tsv"
+    ratings_path = "../data/title.ratings.tsv"
 
     print("Loading raw datasets...")
     raw_basics = spark.read.option("sep", "\t") \

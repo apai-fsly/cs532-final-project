@@ -176,3 +176,4 @@ cython_debug/
 
 # Custom
 data/*.tsv
+dataset/*.tsv

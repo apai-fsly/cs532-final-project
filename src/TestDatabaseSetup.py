@@ -4,7 +4,8 @@ from pyspark.sql import SparkSession
 
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../db/.env") 
+load_dotenv(dotenv_path="../setup/.env") 
+
 
 # Define the JDBC URL and connection properties
 jdbc_url = f"jdbc:mysql://{os.getenv('MYSQL_HOST')}:{os.getenv('MYSQL_PORT')}/{os.getenv('MYSQL_DATABASE')}"
