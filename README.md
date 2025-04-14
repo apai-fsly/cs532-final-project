@@ -179,7 +179,7 @@ python TestDatabaseSetup.py
 ```
 4. Run `DataCleaning.py`
 ```sh
-python DataCleaning.py.py
+python DataCleaning.py
 ```
 5. Run `DataStorage.py`
 
