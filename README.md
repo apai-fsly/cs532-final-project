@@ -1,6 +1,14 @@
 # CS532 Final Project
 The Final Project for COMPSCI CS532 - Systems for Data Science.
 
+This project showcases the complete workflow of handling large datasets, including ingestion, cleaning, transformation, and storage using modern data engineering tools. The pipeline involves downloading datasets from Kaggle, processing them with PySpark, and storing the cleaned data in a MySQL database hosted in a Docker container. Additionally, the project evaluates system performance by benchmarking batch ingestion under different configurations.
+
+Key components:
+- **Data Download**: Automate dataset retrieval from Kaggle using the Kaggle API.
+- **Data Cleaning**: Use PySpark to clean and preprocess raw datasets.
+- **Data Storage**: Store cleaned data into a MySQL database using PySpark and JDBC.
+- **Performance Benchmarking**: Analyze ingestion performance under varying configurations.
+
 ## Milestone Checklist
 - [x] Set up a MySQL database in a Docker container.
 - [x] Test Python connectivity to the MySQL database.
@@ -9,6 +17,10 @@ The Final Project for COMPSCI CS532 - Systems for Data Science.
 - [x] Ingest cleaned data into the MySQL database.
 - [ ] Benchmark batch ingestion performance with varying hardware configurations.
 - [ ] Plot performance insights comparing rows processed per second.
+
+## System Design
+
+![System Design](./assets/System_Design.png "System Design Diagram")
 
 ## Prerequisite Software
 1. Docker Daemon
