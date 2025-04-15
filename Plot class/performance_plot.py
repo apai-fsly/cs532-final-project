@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import itertools
 
 class PerformancePlot:
-    def __init__(self, x_label_name, param1_name, param2_name):
+    def __init__(self, x_label_name, param1_name, param2_name, table_name):
         """
         Initialize the plot with variable and parameter names.
 
@@ -13,6 +13,7 @@ class PerformancePlot:
         self.x_label_name = x_label_name
         self.param1_name = param1_name
         self.param2_name = param2_name
+        self.table_name = table_name
         self.lines = []
         self.styles = ['-', '--', '-.', ':']  # Predefined line styles
         self.colors = plt.cm.get_cmap('tab10', 10)  # Color palette with 10 distinct colors
@@ -55,7 +56,7 @@ class PerformancePlot:
                 label=label_text
             )
 
-        plt.title(f'Execution Time vs {self.x_label_name}')
+        plt.title(f'Execution Time vs {self.x_label_name}\n for the table {self.table_name}')
         plt.xlabel(self.x_label_name)
         plt.ylabel('Execution Time (seconds)')
         plt.legend()
@@ -67,3 +68,4 @@ class PerformancePlot:
             print(f"Plot saved as {save_path}")
         else:
             plt.show()
+
