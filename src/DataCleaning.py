@@ -12,6 +12,22 @@ def create_spark_session():
         .config("spark.driver.memory", "8g") \
         .getOrCreate()
 
+#Load IMDb datasets from TSV files into Spark DataFrames
+def load_data(spark, basics_path, ratings_path):
+
+    basics_df = spark.read.option("sep", "\t") \
+                          .option("header", "true") \
+                          .option("nullValue", "\\N") \
+                          .csv(basics_path)
+
+    ratings_df = spark.read.option("sep", "\t") \
+                           .option("header", "true") \
+                           .option("nullValue", "\\N") \
+                           .csv(ratings_path)
+    
+    return basics_df, ratings_df
+
+
 
 #Title.basics file
 #Accept rows where titleType is "movie",tconst is not null or empty, primaryTitle is not null or empty, and startYear is valid
@@ -53,22 +69,13 @@ def clean_title_ratings(df):
 def main():
     spark = create_spark_session()
     
-    #For running locally, add data folder to the solution
     # Define paths to files
     basics_path = "../data/title.basics.tsv"
     ratings_path = "../data/title.ratings.tsv"
     
     # Load data
     print("Loading data...")
-    basics_df = spark.read.option("sep", "\t") \
-                          .option("header", "true") \
-                          .option("nullValue", "\\N") \
-                          .csv(basics_path)
-
-    ratings_df = spark.read.option("sep", "\t") \
-                           .option("header", "true") \
-                           .option("nullValue", "\\N") \
-                           .csv(ratings_path)
+    basics_df, ratings_df = load_data(spark, basics_path, ratings_path)
     
     # Clean data
     print("Cleaning data...")
