@@ -1,0 +1,17 @@
+{
+    "executor_memory": "8g",
+    "executor_cores": 4,
+    "driver_memory": "8g",
+    "parallelism": 4,
+    "shuffle_partitions": 8,
+    "memory_fraction": 0.7,
+    "storage_fraction": 0.3,
+    "network_timeout": "240s",
+    "sql_adaptive_enabled": true,
+    "temp_dir": "/tmp/spark-benchmark",
+    "performance_test": {
+        "cores_to_test": [1, 2, 4, 6, 8, 10, 12],
+        "memory_to_test": ["1g", "2g", "4g", "6g", "8g", "12g", "16g"],
+        "threads_to_test": [1, 2, 4, 6, 8, 10, 12]
+    }
+}

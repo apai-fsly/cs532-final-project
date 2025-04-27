@@ -1,10 +1,14 @@
 import os
 from dotenv import load_dotenv
 from pyspark.sql import SparkSession
+from CommonHelper import resolve_path
 
+envpath = resolve_path("./setup/.env")
+jdbsc_driver_path = resolve_path("./jars/mysql-connector-j-9.2.0.jar")  
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../setup/.env") 
+
+load_dotenv(dotenv_path=envpath) 
 
 
 # Define the JDBC URL and connection properties
@@ -18,7 +22,7 @@ connection_properties = {
 # Initialize Spark session and specify the path to the JDBC driver
 spark = SparkSession.builder \
     .appName("PySpark MySQL Connection") \
-    .config("spark.jars", "../jars/mysql-connector-j-9.2.0.jar") \
+    .config("spark.jars", jdbsc_driver_path) \
     .getOrCreate()
 
 # Read data from the 'employees' table in MySQL

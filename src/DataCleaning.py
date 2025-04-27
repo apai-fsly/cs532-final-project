@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col,trim, initcap
 from pyspark.sql.types import DoubleType, IntegerType
+from CommonHelper import resolve_path
 
 
 #Create a Spark session with specific configurations
@@ -70,8 +71,8 @@ def main():
     spark = create_spark_session()
     
     # Define paths to files
-    basics_path = "../data/title.basics.tsv"
-    ratings_path = "../data/title.ratings.tsv"
+    basics_path = resolve_path("data/title.basics.tsv")
+    ratings_path = resolve_path("data/title.ratings.tsv") 
     
     # Load data
     print("Loading data...")
