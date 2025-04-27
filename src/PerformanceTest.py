@@ -2,21 +2,44 @@ from pyspark.sql import SparkSession
 import time
 import os
 from DataCleaning import clean_title_basics, clean_title_ratings,load_data
+from SparkConfig import load_config
+from CommonHelper import resolve_path
 
+SparkConfigPath =resolve_path("./configurations/config.json")
 
 #Create and return a Spark session with configurable resources
-#Defaults are core = 4, memory = 4g, threads = 2
 #We will vary one of these parameters at a time to see how it affects performance
-def create_spark_session(cores, memory, threads):
+def create_spark_session(cores=None, memory=None, threads=None):
 
+    # Load base configuration
+    
+    base_config = load_config(SparkConfigPath)
 
+    #Create a Spark session with the specified configurations
     builder = SparkSession.builder.appName("Performance Testing")
       
-    builder = builder.config("spark.cores.max", cores)
-    builder = builder.config("spark.executor.memory", memory)
-    builder = builder.config("spark.driver.memory", memory)
-    builder = builder.config("spark.executor.cores", threads)
-    builder = builder.config("spark.task.cpus", 1) #Each task will use 1 CPU core
+    # Set cores if provided, otherwise use config value
+    if cores is not None:
+        builder = builder.config("spark.cores.max", cores)
+    else:
+        builder = builder.config("spark.cores.max", base_config.executor_cores)
+    
+    # Set memory if provided, otherwise use config value
+    if memory is not None:
+        builder = builder.config("spark.executor.memory", memory)
+        builder = builder.config("spark.driver.memory", memory)
+    else:
+        builder = builder.config("spark.executor.memory", base_config.executor_memory)
+        builder = builder.config("spark.driver.memory", base_config.driver_memory)
+    
+    # Set threads if provided, otherwise use config value
+    if threads is not None:
+        builder = builder.config("spark.executor.cores", threads)
+    else:
+        builder = builder.config("spark.executor.cores", base_config.parallelism)
+    
+    #Each task will use 1 CPU core
+    builder = builder.config("spark.task.cpus", 1) 
     
     return builder.getOrCreate()
 
@@ -43,17 +66,23 @@ def performance_test(function_to_run, data_df, test_name):
 # Run the benchmarks with different configurations
 def run_benchmarks(basics_path, ratings_path):
     
-    # Configuration ranges to test
-    cores_to_test = [1, 2, 4, 8]  # Adjust based on your system
-    memory_to_test = ['1g', '2g', '4g', '8g']  # Memory configurations
-    threads_to_test = [1, 2, 4]  # Threads per executor
+    # Load base configuration to see what ranges we should test
+    base_config = load_config(SparkConfigPath)
 
+    # Use test ranges from config
+    cores_to_test = base_config.cores_to_test
+    memory_to_test = base_config.memory_to_test
+    threads_to_test = base_config.threads_to_test
+    
+    print(f"Testing cores: {cores_to_test}")
+    print(f"Testing memory: {memory_to_test}")
+    print(f"Testing threads: {threads_to_test}")
 
     # Test different core configurations
     print("\n=== BENCHMARKING CPU CORES ===")
     for cores in cores_to_test:
         print(f"\nTesting with {cores} cores...")
-        spark = create_spark_session(cores=cores, memory='4g', threads=2)
+        spark = create_spark_session(cores=cores, memory=base_config.executor_memory, threads=2)
         
         # Load data
         basics_df, ratings_df = load_data(spark, basics_path, ratings_path)
@@ -71,7 +100,7 @@ def run_benchmarks(basics_path, ratings_path):
     print("\n=== BENCHMARKING MEMORY ===")
     for memory in memory_to_test:
         print(f"\nTesting with {memory} memory...")
-        spark = create_spark_session(cores=4, memory=memory, threads=2)
+        spark = create_spark_session(cores=base_config.executor_cores, memory=memory, threads=2)   
         
         # Load data
         basics_df, ratings_df = load_data(spark, basics_path, ratings_path)
@@ -89,7 +118,7 @@ def run_benchmarks(basics_path, ratings_path):
     print("\n=== BENCHMARKING THREADS ===")
     for threads in threads_to_test:
         print(f"\nTesting with {threads} threads per executor...")
-        spark = create_spark_session(cores=4, memory='4g', threads=threads)
+        spark = create_spark_session(cores=base_config.executor_cores, memory=base_config.executor_memory, threads=threads)
         
         # Load data
         basics_df, ratings_df = load_data(spark, basics_path, ratings_path)
@@ -110,8 +139,8 @@ def main():
     print("Starting performance benchmarking...")
     
     # Define paths to data files
-    basics_path = "../data/title.basics.tsv"
-    ratings_path = "../data/title.ratings.tsv"
+    basics_path = resolve_path("./data/title.basics.tsv")
+    ratings_path =resolve_path("./data/title.ratings.tsv")
     
     # Run all benchmarks
     run_benchmarks(basics_path, ratings_path)

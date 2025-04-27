@@ -5,17 +5,21 @@ from pyspark.sql import SparkSession
 from pyspark.sql import DataFrame
 from DataCleaning import clean_title_basics, clean_title_ratings  # Import cleaning functions
 from SparkConfig import load_config
+from CommonHelper import resolve_path
 
-config = load_config(path=CONFIG_PATH)
+SparkConfigPath= resolve_path("./configurations/config.json")
+JDBCDriverPath = resolve_path("./jars/mysql-connector-j-9.2.0.jar")
+
+config = load_config(path=SparkConfigPath)
 
 def create_spark_session(config):
     """Create and return a Spark session."""
     print(config)
     return SparkSession.builder \
         .appName("Data Storage") \
-        .config("spark.executor.memory", "4g") \
-        .config("spark.driver.memory", "4g") \
-        .config("spark.jars", "../jars/mysql-connector-j-9.2.0.jar") \
+        .config("spark.executor.memory", config.executor_memory) \
+        .config("spark.driver.memory", config.driver_memory) \
+        .config("spark.jars", JDBCDriverPath) \
         .getOrCreate()
 
 def store_to_mysql(df: DataFrame, table_name: str, jdbc_url: str, connection_properties: dict):
@@ -32,7 +36,8 @@ def store_to_mysql(df: DataFrame, table_name: str, jdbc_url: str, connection_pro
 def main():
 
      # Load environment variables from .env file
-    load_dotenv(dotenv_path="../setup/.env") 
+    env_path = resolve_path("./setup/.env")
+    load_dotenv(dotenv_path=env_path) 
 
     # Fetch MySQL connection properties from environment variables
     jdbc_url = f"jdbc:mysql://{os.getenv('MYSQL_HOST')}:{os.getenv('MYSQL_PORT')}/{os.getenv('MYSQL_DATABASE')}"
@@ -43,14 +48,15 @@ def main():
     }
 
     # Create Spark session
-    spark = create_spark_session()
+    spark = create_spark_session(config)
 
 
     # Load raw datasets
-    basics_path = "../data/title.basics.tsv"
-    ratings_path = "../data/title.ratings.tsv"
+    basics_path = resolve_path("./data/title.basics.tsv")
+    ratings_path =resolve_path("./data/title.ratings.tsv")
 
     print("Loading raw datasets...")
+
     raw_basics = spark.read.option("sep", "\t") \
                            .option("header", "true") \
                            .option("nullValue", "\\N") \
@@ -66,7 +72,7 @@ def main():
     start_time = time.time()
     cleaned_basics = clean_title_basics(raw_basics)
     cleaned_ratings = clean_title_ratings(raw_ratings)
-    total_time = start_time - time.now()
+    total_time = time.time() - start_time
     print(str(total_time) + " seconds for cleaning the data")
 
 
