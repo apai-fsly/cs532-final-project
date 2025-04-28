@@ -14,19 +14,14 @@ def create_spark_session():
         .getOrCreate()
 
 #Load IMDb datasets from TSV files into Spark DataFrames
-def load_data(spark, basics_path, ratings_path):
+def load_data(spark, dataset_path):
 
-    basics_df = spark.read.option("sep", "\t") \
+    dataset_df = spark.read.option("sep", "\t") \
                           .option("header", "true") \
                           .option("nullValue", "\\N") \
-                          .csv(basics_path)
-
-    ratings_df = spark.read.option("sep", "\t") \
-                           .option("header", "true") \
-                           .option("nullValue", "\\N") \
-                           .csv(ratings_path)
+                          .csv(dataset_path)
     
-    return basics_df, ratings_df
+    return dataset_df
 
 
 
@@ -76,7 +71,9 @@ def main():
     
     # Load data
     print("Loading data...")
-    basics_df, ratings_df = load_data(spark, basics_path, ratings_path)
+    basics_df = load_data(spark,basics_path) 
+    ratings_df = load_data(spark,ratings_path)
+
     
     # Clean data
     print("Cleaning data...")

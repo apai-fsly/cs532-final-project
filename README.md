@@ -9,14 +9,17 @@ Key components:
 - **Data Storage**: Store cleaned data into a MySQL database using PySpark and JDBC.
 - **Performance Benchmarking**: Analyze ingestion performance under varying configurations.
 
-## Milestone Checklist
+## Goals Checklist
 - [x] Set up a MySQL database in a Docker container.
 - [x] Test Python connectivity to the MySQL database.
 - [x] Find and load the dataset with correct instructions.
 - [x] Clean each relevant dataset and combine datasets using PySpark.
 - [x] Ingest cleaned data into the MySQL database.
-- [ ] Benchmark batch ingestion performance with varying hardware configurations.
-- [ ] Plot performance insights comparing rows processed per second.
+- [x] Benchmark batch ingestion performance with varying hardware configurations.
+- [x] Plot performance insights comparing rows processed per second.
+- [ ] Configure the Read and Write Speeds of the Database to simulate the SSD and HDD.
+- [ ] Measure the performance for performing queries on the data using Htop/lotop
+- [ ] Plot a chart highlighting insights comparing query time vs. drive technology
 
 ## System Design
 
@@ -30,6 +33,7 @@ Key components:
 5. MySQL Connector for Python
 6. Python-dotenv
 7. Kaggle API
+8. MatPlotLib
 
 
 
@@ -61,6 +65,10 @@ Key components:
     ```sh
     pip install kaggle
     ```
+6. **Install MatPlotLib**
+    ```sh
+    pip install matplotlib
+
 
 
 ### Setup Environment File
@@ -164,6 +172,7 @@ python TestDatabaseSetup.py
 ```
 
 ## Running the Application
+ 
 1. Start the database container
 From the [setup](./setup) directory, run 
 ```sh
@@ -173,16 +182,17 @@ From the [setup](./setup) directory, run
 ```sh
 cd src
 ```
-3. Run `TestDatabaseSetup.py`
+3. Run `TestDatabaseSetup.py` to ensure the Database is set up correctly
 ```sh
 python TestDatabaseSetup.py
 ```
-4. Run `DataCleaning.py`
+4. Run `SparkPerformanceTest.py` to run benchmarking on data ingestion.
 ```sh
-python DataCleaning.py
+python SparkPerformanceTest.py
 ```
-5. Run `DataStorage.py`
+5. Run `TBD` to run benchmarking on query processing.
 
 ```sh
-python DataStorage.py
+python TBD
 ```
+
