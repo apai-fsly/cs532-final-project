@@ -16,6 +16,7 @@ Key components:
 - [x] Clean each relevant dataset and combine datasets using PySpark.
 - [x] Ingest cleaned data into the MySQL database.
 - [x] Benchmark batch ingestion performance with varying hardware configurations.
+- [x] Plot performance insights comparing execution time vs hardware constraints.
 - [x] Plot performance insights comparing rows processed per second.
 - [ ] Configure the Read and Write Speeds of the Database to simulate the SSD and HDD.
 - [ ] Measure the performance for performing queries on the data using Htop/lotop
