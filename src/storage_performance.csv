@@ -1,0 +1,6 @@
+Query,SSD_Time,HDD_Time,Speedup,Returned_Rows
+"COUNT(*)",0.15,1.20,8.0,8000000
+"Filter (rating > 8)",0.45,3.80,8.4,120000
+"JOIN with filter",1.20,12.50,10.4,45000
+"Range with sort",0.80,6.50,8.1,150000
+"GROUP BY with limit",1.50,9.80,6.5,10
