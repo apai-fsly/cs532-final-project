@@ -48,9 +48,7 @@ def create_performance_chart(results, parameter, metrics=None, labels=None,
     # Filter results for the selected parameter
     filtered_results = [r for r in results if r['parameter'] == parameter]
     
-    # Sort results by parameter value
-    filtered_results.sort(key=lambda x: sort_key(x['value']))
-    
+   
     # Extract data for plotting
     x_values = [str(r['value']) for r in filtered_results]
     

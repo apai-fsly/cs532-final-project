@@ -3,9 +3,6 @@ The Final Project for COMPSCI CS532 - Systems for Data Science.
 
 This project showcases the complete workflow of handling large datasets, including ingestion, cleaning, transformation, and storage using modern data engineering tools. The pipeline involves downloading datasets from Kaggle, processing them with PySpark, and storing the cleaned data in a MySQL database hosted in a Docker container. Additionally, the project evaluates system performance by benchmarking batch ingestion under different configurations.
 
-Link to Video: https://drive.google.com/file/d/1V4QmOgKDmmJ0hEERmfOov6aGFu1B2ywL/view?usp=sharing
-
-
 Key components:
 - **Data Download**: Automate dataset retrieval from Kaggle using the Kaggle API.
 - **Data Cleaning**: Use PySpark to clean and preprocess raw datasets.
@@ -27,7 +24,7 @@ Key components:
 
 ## System Design
 
-![System Design](./assets/System_Design.png "System Design Diagram")
+![System Design](./doc/SystemDesign.png "System Design Diagram")
 
 ## Prerequisite Software
 1. Docker Daemon

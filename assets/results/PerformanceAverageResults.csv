@@ -1,0 +1,16 @@
+parameter,value,execution_time,throughput
+cores,4,280.80,2151
+cores,8,184.83,3642
+cores,12,208.20,3412
+cores,16,192.92,3624
+cores,20,245.63,2611
+memory,2g,286.38,2108
+memory,4g,196.52,3506
+memory,8g,270.985,2291
+memory,12g,223.27,2753
+memory,16g,188.93,4488
+parallelism,1,261.48,2309
+parallelism,2,282.42,2137
+parallelism,4,249.7,2439
+parallelism,8,280.95,2163
+parallelism,16,237.91,2538
