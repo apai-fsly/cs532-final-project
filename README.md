@@ -204,7 +204,8 @@ python TestDatabaseSetup.py
 ```
 
 ## Running the Application
- 
+
+### Performance Benchmarking (Experiment 1)
 1. Start the database container
 From the [setup](./setup) directory, run 
 ```sh
@@ -227,7 +228,7 @@ python DataCleaning.py
 ```sh
 python BenchmarkFullDataPipeline.py
 ```
-6. Run `BenchmarkDataCleaning.py` to run benchmarking on data cleaning process. This will measure performance analysis on cleaning the 20% samle of title_akas dataset. Once the benchmarking is complete, results will be printed in the console and stored in [results](./assets/results)
+6. Run `BenchmarkDataCleaning.py` to run benchmarking on data cleaning process. This will measure performance analysis on cleaning the 20% sample of title_akas dataset. Once the benchmarking is complete, results will be printed in the console and stored in [results](./assets/results)
 
 ```sh
 python BenchmarkDataCleaning.py
@@ -243,3 +244,29 @@ Store the results from `BenchmarkDataCleaning.py` as contents in [CleaningAverag
 ```sh
 python SparkPerformanceVisualizer.py
 ```
+
+### Query Analysis (Experiment 2)
+
+1. Create a linux VM (this was tested and configured on Kali Linux VM Specifically but should work on any non-Apple Silicon envirorment)
+
+2. Run the following command(s): 
+
+```sh
+docker run -it --rm \
+  --device-read-bps /dev/sda:100mb \
+  --device-write-bps /dev/sda:100mb \
+  -v "$PWD/data:/app/data" \
+  my-benchmark-image
+```
+
+```sh
+python DataStorage.py
+```
+
+This should generate a csv file called 'storage_performance_results.csv'
+
+```sh
+python BenchmarkQueries
+```
+
+This command should generate a graph comparing the results of the query. 
