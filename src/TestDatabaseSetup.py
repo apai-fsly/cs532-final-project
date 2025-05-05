@@ -25,6 +25,9 @@ spark = SparkSession.builder \
     .config("spark.jars", jdbsc_driver_path) \
     .getOrCreate()
 
+# Set log level to ERROR to disable warnings
+spark.sparkContext.setLogLevel("ERROR")
+    
 # Read data from the 'employees' table in MySQL
 df = spark.read.jdbc(url=jdbc_url, table="employees", properties=connection_properties)
 
