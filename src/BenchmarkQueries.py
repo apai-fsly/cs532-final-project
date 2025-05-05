@@ -3,12 +3,13 @@ import mysql.connector
 from mysql.connector import Error
 import statistics
 import matplotlib.pyplot as plt
+import csv
 
 def run_query(connection_config, query, iterations=3):
     """Run a query multiple times and return average performance metrics"""
     times = []
     result_count = 0
-    
+
     try:
         connection = mysql.connector.connect(**connection_config)
         cursor = connection.cursor()
@@ -16,12 +17,12 @@ def run_query(connection_config, query, iterations=3):
         for _ in range(iterations):
             # Clear cache between runs for more accurate comparison
             cursor.execute("RESET QUERY CACHE;") if "RESET QUERY CACHE" in dir(cursor) else None
-            
+
             start_time = time.time()
             cursor.execute(query)
             result = cursor.fetchall()
             elapsed_time = time.time() - start_time
-            
+
             times.append(elapsed_time)
             result_count = len(result)
 
@@ -81,7 +82,7 @@ def main():
         },
         "HDD": {
             'host': '127.0.0.1',
-            'port': 3307,  # Different port for HDD instance
+            'port': 3307,
             'user': 'myuser',
             'password': 'mypassword',
             'database': 'imdb_hdd',
@@ -99,7 +100,17 @@ def main():
                 results[label][query] = time_taken
             else:
                 print(f"Query failed on {label} storage")
-    
+
+    # Write to CSV
+    with open('storage_performance_results.csv', mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Query", "SSD_Time(s)", "HDD_Time(s)", "Speedup (HDD/SSD)"])
+        for query in query_list:
+            ssd_time = results['SSD'].get(query, 0)
+            hdd_time = results['HDD'].get(query, 0)
+            speedup = hdd_time / ssd_time if ssd_time > 0 else 0
+            writer.writerow([query, f"{ssd_time:.4f}", f"{hdd_time:.4f}", f"{speedup:.2f}"])
+
     # Generate visualization
     plot_results(results)
 

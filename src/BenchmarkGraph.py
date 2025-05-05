@@ -1,20 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
-# Static data
-queries = [
-    "COUNT(*)",
-    "Filter (rating > 8)",
-    "JOIN with filter",
-    "Range with sort",
-    "GROUP BY with limit"
-]
+# Read from CSV
+queries = []
+ssd_times = []
+hdd_times = []
+speedups = []
+returned_rows = []  # Optional: Fill this if you add it to the CSV later
 
-# These values are pulled from storage_performance.csv
-ssd_times = [0.15, 0.45, 1.20, 0.80, 1.50]
-hdd_times = [1.20, 3.80, 12.50, 6.50, 9.80]
-speedups = [8.0, 8.4, 10.4, 8.1, 6.5]
-returned_rows = [8000000, 120000, 45000, 150000, 10]
+with open('storage_performance_results.csv', mode='r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        queries.append(row['Query'][:30] + '...' if len(row['Query']) > 30 else row['Query'])
+        ssd_times.append(float(row['SSD_Time(s)']))
+        hdd_times.append(float(row['HDD_Time(s)']))
+        speedups.append(float(row['Speedup (HDD/SSD)']))
+
+# Optionally, manually define returned_rows if not in CSV
+returned_rows = [8000000, 120000, 45000, 150000, 10]  # Update if you log this
 
 # Create figure with better spacing
 fig, (ax, ax_table) = plt.subplots(
@@ -22,7 +26,7 @@ fig, (ax, ax_table) = plt.subplots(
     gridspec_kw={'height_ratios': [3, 1]},
     figsize=(10, 8)
 )
-fig.subplots_adjust(hspace=0.5)  # Space between plot and table
+fig.subplots_adjust(hspace=0.5)
 
 # Bar plot
 bar_width = 0.35
@@ -46,15 +50,15 @@ ax.grid(True, linestyle='--', alpha=0.6)
 ax.set_ylim(0, max(hdd_times)*1.2)
 
 # Create table
-row_labels = queries
+col_labels = queries
+row_labels = ["Returned rows"]
 table_data = [[f"{row:,}" for row in returned_rows]]
-col_labels = ["Returned rows"]
 
 ax_table.axis('off')
 table = ax_table.table(
     cellText=table_data,
-    rowLabels=col_labels,
-    colLabels=queries,
+    rowLabels=row_labels,
+    colLabels=col_labels,
     cellLoc='center',
     loc='center'
 )
