@@ -136,6 +136,7 @@ ENV/
 env.bak/
 venv.bak/
 myenv/
+.vs/*
 
 # Spyder project settings
 .spyderproject
@@ -177,3 +178,5 @@ cython_debug/
 # Custom
 data/*.tsv
 dataset/*.tsv
+data/*.parquet
+data/*

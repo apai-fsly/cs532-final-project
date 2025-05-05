@@ -1,0 +1,14 @@
+parameter,value,execution_time
+cores,4,50.21
+cores,8,33.73
+cores,12,25.04
+cores,16,29.425
+memory,2g,26.96
+memory,4g,43.63
+memory,8g,55.63
+memory,16g,24.65
+parallelism,1,23.055
+parallelism,2,27.79
+parallelism,4,24.92
+parallelism,8,38.16
+parallelism,16,33.165
