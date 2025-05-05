@@ -38,10 +38,17 @@ Key components:
 8. MatPlotLib
 9. Tabulate
 
+## Machine Specification used for Test runs
+1. CPU（# vCPU）:12th Gen Intel® Core™ i9-12900H, 2901 MHz, 14 Cores(s), 20 Logical Processors(s) 
+2. GPU (model, # gpu): NVIDIA RTX A2000 8GB Laptop GPU
+3. OS version: Microsoft Windows 11 10.0.22621 N/A Build 22621
+4. VM Ubuntu Version : 24.04
+5. Spark 	3.5.5
+6. Python	3.12.3
+7. Docker	26.1.3
 
 
 ## Setup
-### Note: We have tested this only in Ubuntu VM
 ### Install packages
 
 1. **Update package lists**
@@ -227,11 +234,11 @@ python BenchmarkDataCleaning.py
 ```
 7. Once multiple runs of the benchmarking has been done and results seem stable, store the averaged data in the [results](./assets/results) folder to be later plotted using matplotlib.
 
-Store the results from `BenchmarkFullDataPipeline.py` as `PerformanceAverageResults.csv`. The name and format **MUST** match as the sample already available in [results](./assets/results).
+Store the results from `BenchmarkFullDataPipeline.py` as contents in [PerformanceAverageResults.csv](./assets/results/PerformanceAverageResults.csv). The name and format **MUST** match as the sample already available in the [results](./assets/results) folder.
 
-Store the results from `BenchmarkDataCleaning.py` as `CleaningAverageResults.csv`. The name and format **MUST** match as the sample already available in [results](./assets/results).
+Store the results from `BenchmarkDataCleaning.py` as contents in [CleaningAverageResults.csv](./assets/results/CleaningAverageResults.csv).The name and format **MUST** match as the sample already available in the [results](./assets/results) folder.
 
-8. Once the above steps are done to generate the average results, run `SparkPerformanceVisualizer.py` to plot the final charts. All the charts are stored in the [charts](./assets/charts)
+8. Once the above steps are done to generate the average results, run `SparkPerformanceVisualizer.py` to plot the final charts. All the charts are stored in the [charts](./assets/charts) folder.
 
 ```sh
 python SparkPerformanceVisualizer.py
