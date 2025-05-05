@@ -238,7 +238,7 @@ def clean_datasets(spark, data_dir, analyze=False,save_to_parquet=True):
 
 
 #This method will join the cleaned datasets to create a master movie dataset
-#We will join the cleaned datasets on tconst primarily and include the essebtial columns from each dataset
+#We will join the cleaned datasets on tconst primarily and include the essential columns from each dataset
 #We will also include the top actor and actress for each movie, as well as the directors
 def create_master_table(cleaned_dfs):
     """
@@ -414,13 +414,6 @@ def main():
     master_df.printSchema()
     master_df.show(5, truncate=False)
 
-
-    # Save the master DataFrame to a parquet file
-    #output_path = resolve_path("./data/master_dataset/integrated_movie_data.parquet")
-    #master_df.write.parquet(output_path, mode="overwrite")
-
-    
-    #print(f"Integrated dataset saved to {output_path}")
     
     # Stop Spark session
     spark.stop()

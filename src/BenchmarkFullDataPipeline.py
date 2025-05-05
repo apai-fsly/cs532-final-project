@@ -50,6 +50,7 @@ def create_spark_session(cores=None, memory=None, parallelism=None):
 
 def test_full_pipeline(test_param, param_value, cleaned_data_dir, test_id):
     """Run a test for the full pipeline including transformation and DB ingestion"""
+    
     # Set up the appropriate Spark configuration
     if test_param == "cores":
         spark = create_spark_session(cores=param_value)

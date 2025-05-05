@@ -65,7 +65,7 @@ def analyze_nulls(df):
 
 
 #Load cleaned datasets from parquet files
-# This method will load pre-cleaned datasets from parquet files.
+# This method will load pre-cleaned datasets from parquet files for further analysis or processing.
 def load_cleaned_datasets(spark, data_dir=None):
     """
     Load pre-cleaned datasets from parquet files.
@@ -112,6 +112,7 @@ def load_cleaned_datasets(spark, data_dir=None):
     
     return cleaned_dfs
 
+#Verify if cleaned datasets exist in the specified directory
 def verify_cleaned_datasets_exist(cleaned_data_dir):
     """
     Verify that all required cleaned datasets exist and return True/False
