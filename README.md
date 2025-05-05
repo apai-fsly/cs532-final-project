@@ -7,7 +7,7 @@ Key components:
 - **Data Download**: Automate dataset retrieval from Kaggle using the Kaggle API.
 - **Data Cleaning**: Use PySpark to clean and preprocess raw datasets.
 - **Data Storage**: Store cleaned data into a MySQL database using PySpark and JDBC.
-- **Performance Benchmarking**: Analyze ingestion performance under varying configurations.
+- **Performance Benchmarking**: Analyze ingestion and query processing performance under varying configurations.
 
 ## Goals Checklist
 - [x] Set up a MySQL database in a Docker container.
@@ -18,13 +18,14 @@ Key components:
 - [x] Benchmark batch ingestion performance with varying hardware configurations.
 - [x] Plot performance insights comparing execution time vs hardware constraints.
 - [x] Plot performance insights comparing rows processed per second.
-- [ ] Configure the Read and Write Speeds of the Database to simulate the SSD and HDD.
-- [ ] Measure the performance for performing queries on the data using Htop/lotop
-- [ ] Plot a chart highlighting insights comparing query time vs. drive technology
+- [x] Configure the Read and Write Speeds of the Database to simulate the SSD and HDD.
+- [x] Measure the performance for performing queries on the data using Htop/lotop
+- [x] Plot a chart highlighting insights comparing query time vs. drive technology
 
 ## System Design
 
 ![System Design](./doc/SystemDesign.png "System Design Diagram")
+
 
 ## Prerequisite Software
 1. Docker Daemon
@@ -35,11 +36,12 @@ Key components:
 6. Python-dotenv
 7. Kaggle API
 8. MatPlotLib
+9. Tabulate
 
 
 
 ## Setup
-
+### Note: We have tested this only in Ubuntu VM
 ### Install packages
 
 1. **Update package lists**
@@ -69,11 +71,16 @@ Key components:
 6. **Install MatPlotLib**
     ```sh
     pip install matplotlib
-
+    ```
+7. **Install Tabulate**
+    ```sh
+    pip install tabulate
+    ```
 
 
 ### Setup Environment File
 Create a `.env` file in the [setup](./setup) directory and enter the following values. This file should **not** be committed to version control.
+Update the Mysql username and password at this stage if required.
 
 ```sh
 MYSQL_DATABASE=mydb
@@ -126,14 +133,30 @@ python DataDownload.py
 
 ## Testing Database Connectivity
 
-1. Start the database container
+1. Verify if all the MYSQL configuratations are added in `.env` as desired.
+
+2. Start the database container
 From the [setup](./setup) directory, run :
+
 ```sh
 `docker-compose up -d` 
 ```
-This starts the database in detached mode.
+This starts the database in detached mode with the credentials specified in the `.env` file.
 
-2. Once the container is up and running, use the following query to create an `employees` table with some sample data:
+3. Verify if the container started up, run:
+
+```sh
+`docker ps` 
+```
+
+4. Create a sample database to test connectivity, run:
+```sh
+`docker exec -it mysqldb mysql -u MYSQL_USER -D MYSQL_DATABASE -p` 
+```
+Make sure to replace the correct values from the `.env` file
+
+5. Execute the following script
+create an `employees` table with some sample data:
 
 ```sh
 CREATE TABLE IF NOT EXISTS employees (
@@ -151,14 +174,15 @@ VALUES
 (4, 'David', 40, 'Engineering'),
 (5, 'Eve', 28, 'Finance');
 ```
-3. Run `TestDatabaseSetup.py` to verify the data:
+
+6. Run `TestDatabaseSetup.py` to verify the data:
 
 ```sh
 cd src
 python TestDatabaseSetup.py
 ```
 
-4. You should see the following output:
+7. You should see the following output:
 
 ```sh
 +---+-------+---+-----------+
@@ -187,13 +211,28 @@ cd src
 ```sh
 python TestDatabaseSetup.py
 ```
-4. Run `SparkPerformanceTest.py` to run benchmarking on data ingestion.
+4.  Run `DataCleaning.py` to  prepare datasets for benchmarking full data pipeline and store as parquet files in the [data](./data) directory.
 ```sh
-python SparkPerformanceTest.py
+python DataCleaning.py
 ```
-5. Run `TBD` to run benchmarking on query processing.
+5. Run `BenchmarkFullDataPipeline.py` to run benchmarking on full data pipeline. This will measure performance analysis on master dataframe creation and store it in the database. Once the benchmarking is complete, results will be printed in the console and stored in [results](./assets/results)
 
 ```sh
-python TBD
+python BenchmarkFullDataPipeline.py
 ```
+6. Run `BenchmarkDataCleaning.py` to run benchmarking on data cleaning process. This will measure performance analysis on cleaning the 20% samle of title_akas dataset. Once the benchmarking is complete, results will be printed in the console and stored in [results](./assets/results)
 
+```sh
+python BenchmarkDataCleaning.py
+```
+7. Once multiple runs of the benchmarking has been done and results seem stable, store the averaged data in the [results](./assets/results) folder to be later plotted using matplotlib.
+
+Store the results from `BenchmarkFullDataPipeline.py` as `PerformanceAverageResults.csv`. The name and format **MUST** match as the sample already available in [results](./assets/results).
+
+Store the results from `BenchmarkDataCleaning.py` as `CleaningAverageResults.csv`. The name and format **MUST** match as the sample already available in [results](./assets/results).
+
+8. Once the above steps are done to generate the average results, run `SparkPerformanceVisualizer.py` to plot the final charts. All the charts are stored in the [charts](./assets/charts)
+
+```sh
+python SparkPerformanceVisualizer.py
+```

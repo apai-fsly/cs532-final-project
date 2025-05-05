@@ -117,7 +117,7 @@ def main():
     akas_path = resolve_path("./data/title.akas.tsv")
 
     # Set sampling fraction - adjust this based on your memory constraints
-    # 0.01 = 1% of data, 0.1 = 20% of data
+    # 0.01 = 1% of data, 0.2 = 20% of data
     sample_fraction = 0.2
     print(f"Using {sample_fraction*100:.1f}% sample of the dataset")
     
