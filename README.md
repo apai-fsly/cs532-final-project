@@ -257,16 +257,28 @@ docker run -it --rm \
   --device-write-bps /dev/sda:100mb \
   -v "$PWD/data:/app/data" \
   my-benchmark-image
+
+  docker run -it --rm \
+  --device-read-bps /dev/sda:500mb \
+  --device-write-bps /dev/sda:500mb \
+  -v "$PWD/data:/app/data" \
+  my-benchmark-image
 ```
 
 ```sh
 python DataStorage.py
 ```
 
-This should generate a csv file called 'storage_performance_results.csv'
+This should load the kaggle data into the database. 
 
 ```sh
-python BenchmarkQueries
+python BenchmarkQueries.py
 ```
 
-This command should generate a graph comparing the results of the query. 
+This command will run the queries and output a csv file called storage_performance_results.csv
+
+```sh
+python BenchmarkGraph.py
+```
+
+This command will generate a graph comparing the performance of queries between HDD and SSD
